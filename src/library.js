@@ -18,7 +18,7 @@ function addBook(library, book) {
 };
 
 function checkoutBook(library, bookTitle, genre) {
-  var shelf = library.shelves[genre];
+  const shelf = library.shelves[genre];
   
   if (searchShelf(shelf, bookTitle)){
     unshelfBook(bookTitle, shelf)
@@ -26,19 +26,20 @@ function checkoutBook(library, bookTitle, genre) {
   } else {
     return `Sorry, there are currently no copies of ${bookTitle} available at the Denver Public Library.`;
   }
-
 };
 
-function takeStock(library, genre) {
-  var libraryName = library.name;
-  if (genre === undefined) {
-    var shelfCount = library.shelves.fantasy.length + library.shelves.fiction.length + library.shelves.nonFiction.length
-    return `There are a total of ${shelfCount} books at the ${libraryName}.`
-  } else {
-    var shelfCount = library.shelves[genre].length;
-    return `There are a total of ${shelfCount} ${genre} books at the ${libraryName}.`
+function takeStock(library, genre = 'all') {
+  const libraryName = library.name;
+  let shelfCount;
+  let genreLabel = 'books';
+
+  if (genre === 'all') {
+    shelfCount = Object.values(library.shelves).reduce((acc, shelf) => acc + shelf.length, 0);
+  } else if (library.shelves[genre]) {
+    shelfCount = library.shelves[genre].length;
+    genreLabel = `${genre} books`;
   }
-  
+  return `There are a total of ${shelfCount} ${genreLabel} at the ${libraryName}.`;
 };
 
 module.exports = {
